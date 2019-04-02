@@ -3,18 +3,16 @@ import matplotlib.pyplot as plt
 
 
 def printGraph(coef):
-	xValues = [i for i in range(-10, 11)]
 	axes = plt.gca()
 	
 	axes.set_xlim(-10, 10)
-	yVar = [f(-10, coef), f(0, coef), f(10, coef), 1, -1]
-	yVar = [min(yVar), max(yVar)]
-	axes.set_ylim(yVar[0], yVar[1])
-		
-	plt.plot([-10, 10], [0, 0])
-	plt.plot([0, 0], [yVar[0], yVar[1]])
+	plt.plot([-10, 10], [0, 0], c='black')
 	
-	plt.plot(xValues, [f(x, coef) for x in xValues], c='lime')
+	ylim = max([f(x, coef) for x in range(-10, 11)])
+	axes.set_ylim(-ylim, ylim)
+	plt.plot([0, 0], [-ylim, ylim], c='black')
+	
+	plt.plot([x for x in range(-10, 11)], [f(x, coef) for x in range(-10, 11)], c='lime')
 	plt.show()
 
 def delta(coef):
