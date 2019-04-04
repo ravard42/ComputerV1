@@ -1,5 +1,6 @@
 import sys
 import matplotlib.pyplot as plt
+from math import sqrt
 
 #On considèrera toujours que l’entrée est bien formatée,
 #ie:
@@ -65,5 +66,32 @@ if __name__ == '__main__':
 	degree = len(coef) - 1
 	print('Degré du polynôme:', degree)
 	if (degree == 2):
-		print('discriminant:', delta(coef))
+		d = delta(coef)
+		print('discriminant:', round(d, 3))
+		if (d > 0):
+			x1 = (-coef[1] - sqrt(d)) / (2 * coef[2])
+			x1 = int(x1) if x1.is_integer() else round(x1, 3)
+			x2 = (-coef[1] + sqrt(d)) / (2 * coef[2])
+			x2 = int(x2) if x2.is_integer() else round(x2, 3)
+			print("discriminant strictement positif donc 2 solutions sur R\nx1 = {}\nx2 = {}".format(x1, x2))
+		elif (d == 0):
+			x0 = -coef[1] / (2 * coef[2])
+			x0 = int(x0) if x0.is_integer() else round(x0, 3)
+			print("Une seule solution -> x0 =", x0)
+		elif (d < 0):
+			xr = -coef[1] / (2 * coef[2])
+			xr = int(xr) if xr.is_integer() else round(xr, 3)
+			xi = sqrt(abs(d)) / (2 * coef[2])
+			xi = int(xi) if xi.is_integer() else round(xi, 3)
+			print("discriminant strictement négatif donc 2 solutions complexes conjuguées :\nx1 = {} - i * {}\nx2 = {} + i * {}".format(xr, xi, xr, xi))
+	elif (degree == 1):
+		x0 = -coef[0] / coef[1]
+		x0 = int(x0) if x0.is_integer() else round(x0, 3)
+		print("Une seule solution -> x0 =", x0)
+	elif (degree == 0):
+		if (coef[0] == 0):
+			print("Tous les réels sont solutions")
+		else:
+			print("Aucune solution")
+	print("note: les flottants sont arrondis a 3 chiffre après la virgule")
 	printGraph(coef)
