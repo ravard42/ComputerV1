@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt
 
@@ -7,18 +8,21 @@ from math import sqrt
 #Tous les termes sont de la forme ap * x^p. 
 #Les puissances sont bien ordonnées et toutes présentes
 
+rep_lim = 10
+
 def printGraph(coef):
 	axes = plt.gca()
 	
-	axes.set_xlim(-10, 10)
-	plt.plot([-10, 10], [0, 0], c='black')
+	axes.set_xlim(-rep_lim, rep_lim)
+	plt.plot([-rep_lim, rep_lim], [0, 0], c='black')
 	
-	ylim = max([f(x, coef) for x in range(-10, 11)])
-	ylim = max(ylim, 10)
+	ylim = max([f(x, coef) for x in range(-rep_lim, rep_lim + 1)])
+	ylim = max(ylim, rep_lim)
 	axes.set_ylim(-ylim, ylim)
 	plt.plot([0, 0], [-ylim, ylim], c='black')
-	
-	plt.plot([x for x in range(-10, 11)], [f(x, coef) for x in range(-10, 11)], c='lime')
+
+	x = np.linspace(-rep_lim, rep_lim, 200)
+	plt.plot(x, f(x, coef))	
 	plt.show()
 
 def delta(coef):
@@ -37,10 +41,11 @@ def print_forme_reduite(coef):
 			end = ' + ' if coef[i + 1] >= 0 else ' - '
 		else:
 			end = " = 0\n"
+		tmp = abs(coef[i]) if i != 0 else coef[i]
 		if (coef[i].is_integer()):
-			print('{} * X^{}'.format(abs(int(coef[i])), i), end=end)
+			print('{} * X^{}'.format(int(tmp), i), end=end)
 		else:
-			print('{} * X^{}'.format(abs(coef[i]), i), end=end)
+			print('{} * X^{}'.format(round(tmp, 3), i), end=end)
 
 if __name__ == '__main__':
 	if (len(sys.argv) != 2):
@@ -62,10 +67,13 @@ if __name__ == '__main__':
 	coef = [left[i] - right[i] for i in range(0, n)]
 	while (not coef[-1] and len(coef) > 1):
 		del coef[-1]
+	print("note: les flottants sont arrondis a 3 chiffres après la virgule")
 	print_forme_reduite(coef)
 	degree = len(coef) - 1
 	print('Degré du polynôme:', degree)
-	if (degree == 2):
+	if (degree > 2):
+		print("le degré de l'équation est supérieur à 2, je ne peux pas résoudre...")
+	elif (degree == 2):
 		d = delta(coef)
 		print('discriminant:', round(d, 3))
 		if (d > 0):
@@ -93,5 +101,4 @@ if __name__ == '__main__':
 			print("Tous les réels sont solutions")
 		else:
 			print("Aucune solution")
-	print("note: les flottants sont arrondis a 3 chiffre après la virgule")
 	printGraph(coef)
